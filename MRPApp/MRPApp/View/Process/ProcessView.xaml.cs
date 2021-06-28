@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace MRPApp.View.Process
 {
@@ -62,14 +64,32 @@ namespace MRPApp.View.Process
             }
         }
 
-        private void BtnEditMyAccount_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void BtnStartProcess_Click(object sender, RoutedEventArgs e)
         {
+            //Gear 애니메이션 속성
+            DoubleAnimation da = new DoubleAnimation();
+            da.From = 0;
+            da.To = 360; //0에서 360도까지 회전
+            da.Duration = new Duration(TimeSpan.FromSeconds(currSchedule.LoadTime)); //구간(얼마동안 반복하는지) : Duration 10초동안 회전, 일정 계획로드타임 할당
+            //da.RepeatBehavior = RepeatBehavior.Forever; //무한으로 회전
 
+            RotateTransform rt = new RotateTransform();
+            Gear1.RenderTransform = rt;
+            Gear1.RenderTransformOrigin = new Point(0.5, 0.5); //정중앙을 기점으로 회전
+            Gear2.RenderTransform = rt;
+            Gear2.RenderTransformOrigin = new Point(0.5, 0.5); //정중앙을 기점으로 회전
+
+            rt.BeginAnimation(RotateTransform.AngleProperty, da);
+
+            //Product 애니메이션 속성
+            DoubleAnimation ma = new DoubleAnimation();
+            ma.From = 131; //처음 product 이미지의 left값
+            ma.To = 590;   //이동하는 x값의 최대값(원하는 마지막 left값)
+            ma.Duration = new Duration(TimeSpan.FromSeconds(currSchedule.LoadTime));
+            //ma.AccelerationRatio = 0.5; //가속도
+            //ma.AutoReverse = true; //왔다갔다하면서 움직임
+
+            Product.BeginAnimation(Canvas.LeftProperty, ma);
         }
     }
 }

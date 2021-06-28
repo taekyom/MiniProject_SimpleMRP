@@ -59,10 +59,10 @@
                 <Image x:Name="Gear1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="100" Width="100"
                        Source="/MRPApp;component/Resources/gear.png" Canvas.Left="56" Canvas.Top="277"></Image>
                 <Image x:Name="Gear2" HorizontalAlignment="Left" VerticalAlignment="Top" Height="100" Width="100"
-                       Source="/MRPApp;component/Resources/gear.png" Canvas.Left="607" Canvas.Top="277"/>
+                       Source="/MRPApp;component/Resources/gear.png" Canvas.Left="608" Canvas.Top="277"/>
                 <Image x:Name="Sensor" Height="100" Width="100"
                        Source="/MRPApp;component/Resources/sensor.png" Canvas.Left="510" Canvas.Top="82"></Image>
-                <Image Source="/MRPApp;component/Resources/belt.png" Canvas.Left="44" Canvas.Top="265"></Image>
+                <Image Source="/MRPApp;component/Resources/belt.png" Canvas.Left="45" Canvas.Top="265"></Image>
                 <Rectangle x:Name="Product" Height="50" Width="50" Canvas.Left="131" Canvas.Top="215"
                            Stroke="Black" Fill="Gray"></Rectangle>
             </Canvas>
