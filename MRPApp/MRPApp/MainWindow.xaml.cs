@@ -19,6 +19,8 @@ using MRPApp.View.Account;
 using MRPApp.View.Store;
 using MRPApp.View.Settings;
 using MRPApp.View.Schedule;
+using System.Configuration;
+using MRPApp.View.Process;
 
 namespace MRPApp
 {
@@ -38,13 +40,21 @@ namespace MRPApp
 
         private void MetroWindow_Activated(object sender, EventArgs e)
         {
-            //if (Commons.LOGINED_USER != null)
-            //    BtnLoginedId.Content = $"{Commons.LOGINED_USER.UserEmail} ({Commons.LOGINED_USER.UserName})";
+            Commons.PLANTCODE = ConfigurationManager.AppSettings.Get("PlantCode");
+            try
+            {
+                var plantName = Logic.DataAccess.GetSettings().Where(c => c.BasicCode.Equals(Commons.PLANTCODE)).FirstOrDefault().CodeName;
+                BtnPlantName.Content = plantName;
+            }
+            catch (Exception ex)
+            {
+                Commons.LOGGER.Error($"예외발생 : {ex}");
+            }
         }
 
         private async void BtnExit_Click(object sender, RoutedEventArgs e)
         {
-            var result = await this.ShowMessageAsync("종료", "프로그램을 종료하시겠습니까?", MessageDialogStyle.Affirmative, null);
+            var result = await this.ShowMessageAsync("종료", "프로그램을 종료하시겠습니까?", MessageDialogStyle.AffirmativeAndNegative, null);
             if (result == MessageDialogResult.Affirmative)
             {
                 Application.Current.Shutdown();
@@ -112,6 +122,19 @@ namespace MRPApp
             catch (Exception ex)
             {
                 Commons.LOGGER.Error($"예외발생 BtnSchedule_Click : {ex}");
+                this.ShowMessageAsync("예외", $"예외발생 : {ex}");
+            }
+        }
+
+        private void BtnMonitroing_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ActiveControl.Content = new ProcessView();
+            }
+            catch (Exception ex)
+            {
+                Commons.LOGGER.Error($"예외발생 BtnMonitroing_Click : {ex}");
                 this.ShowMessageAsync("예외", $"예외발생 : {ex}");
             }
         }
