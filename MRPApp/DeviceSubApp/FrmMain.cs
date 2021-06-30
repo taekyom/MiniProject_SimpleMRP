@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -63,7 +64,7 @@ namespace DeviceSubApp
         private void Timer_Tick(object sender, EventArgs e)
         {
             LblResult.Text = sw.Elapsed.Seconds.ToString();
-            if (sw.Elapsed.Seconds >= 3)
+            if (sw.Elapsed.Seconds >= 2)
             {
                 sw.Stop();
                 sw.Reset();
@@ -85,13 +86,12 @@ namespace DeviceSubApp
                 using (var conn = new SqlConnection(connectionString)) 
                 {
                     var prcResult = correctData["PRC_MSG"] == "OK" ? 1 : 0;
-                    string strUpQry = $"UPDATE Process_DEV "+
-                                      $"   SET PrcEndTime = '{DateTime.Now.ToString("HH:mm:ss")}' " +
-                                      $"     , PrcResult = '{prcResult}' " +
+                    string strUpQry = $"UPDATE Process "+
+                                      $"   SET PrcResult = '{prcResult}' " +
                                       $"     , ModDate = '{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' " +
                                       $"     , ModID = '{"SYS"}' " +
                                       $" WHERE PrcIdx = " +
-                                      $" (SELECT TOP 1 PrcIdx FROM Process_DEV ORDER BY PrcIdx DESC)";
+                                      $" (SELECT TOP 1 PrcIdx FROM Process ORDER BY PrcIdx DESC)";
                     try
                     {
                         conn.Open();
@@ -109,7 +109,8 @@ namespace DeviceSubApp
             }
             iotData.Clear(); //데이터 모두 삭제
         }
-
+        
+        //Mqtt 브로커(내부적 소켓)
         private void Client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e) //e로 메세지 받아옴
         {
             try
@@ -119,8 +120,6 @@ namespace DeviceSubApp
                 // message(json) -> C#
                 var currentData = JsonConvert.DeserializeObject<Dictionary<string, string>>(message); //역직렬화, serializeObject : 직렬화
                 PrcInputDataToList(currentData);
-
-
 
                 //TODO : 메세지 받은 이후에 처리 -> stopwatch로 설정
                 sw.Stop();
@@ -164,6 +163,7 @@ namespace DeviceSubApp
 
         private void UpdateText(string message) //delegate와 인수 개수가 일치해야 함
         {
+            //RtbSubscr 리치 텍스트박스 (UI 스레드)
             if (RtbSub.InvokeRequired)
             {
                 UpdateTextCallback callback = new UpdateTextCallback(UpdateText);
