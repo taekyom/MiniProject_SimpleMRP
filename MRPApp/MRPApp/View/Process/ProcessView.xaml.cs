@@ -143,8 +143,8 @@ namespace MRPApp.View.Process
             
             LblPrcOKAmount.Content = $"{prcOKAmount} 개";
             LblPrcFailAmount.Content = $"{prcFailAmount} 개";
-            LblPrcOKRate.Content = $"{prcOKRate} %";
-            LblPrcFailRate.Content = $"{prcFailRate} %";
+            LblPrcOKRate.Content = $"{prcOKRate.ToString("#.##")} %";
+            LblPrcFailRate.Content = $"{prcFailRate.ToString("#.##")} %";
         }
 
         Dictionary<string, string> currentData = new Dictionary<string, string>();
